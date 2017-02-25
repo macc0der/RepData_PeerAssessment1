@@ -73,7 +73,7 @@ nrow(rowsWithMissingValuesDf)
 ## [1] 2304
 ```
 
-The missing values from the initial dataset were filled in with the mean number of steps of that particular five minute interval.
+The missing values from the initial dataset were filled in with the mean number of steps of that particular five minute interval. The above analysis was repeated with the new dataset.
 
 ```r
 for(i in 1:nrow(rowsWithMissingValuesDf))
@@ -81,6 +81,29 @@ for(i in 1:nrow(rowsWithMissingValuesDf))
   rowsWithMissingValuesDf[i,1]<- stepsInTimeIntervalDf[stepsInTimeIntervalDf$timeInterval==rowsWithMissingValuesDf[i,3],2]
 }
 activityWithoutMissingValuesDf <- merge(rowsWithMissingValuesDf,rowsWithoutMissingValuesDf, all=TRUE)
+
+ dailysteps <- tapply(activityWithoutMissingValuesDf$steps,activityWithoutMissingValuesDf$date,sum)
+ dailystepsdf <- data.frame(date = names(dailysteps), steps=dailysteps)
+ m <- ggplot(dailystepsdf, aes(x=steps))
+ m + geom_histogram(bins=20) + scale_y_continuous(breaks= pretty_breaks())
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+```r
+ mean(dailystepsdf$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+ median(dailystepsdf$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
